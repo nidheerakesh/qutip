@@ -282,6 +282,18 @@ def test_clebsch_large_j(j):
     assert clebsch(j, j, 0, 0, 0, 0) == pytest.approx(expected, rel=1e-12)
 
 
+@pytest.mark.parametrize(['j1', 'j2', 'j3', 'm1', 'm2', 'm3'], [
+    pytest.param(1, 1, 3, 0, 0, 0, id='j3 > j1 + j2'),
+    pytest.param(3, 1, 1, 0, 0, 0, id='j3 < |j1 - j2|'),
+    pytest.param(1, 1, 2, 2, -1, 1, id='|m1| > j1'),
+    pytest.param(1, 1, 2, -1, 2, 1, id='|m2| > j2'),
+    pytest.param(1, 1, 0, 1, 0, 1, id='|m3| > j3'),
+    pytest.param(0.5, 0.5, 2, 0.5, 0.5, 1, id='half-integer j3 too large'),
+])
+def test_clebsch_selection_rules(j1, j2, j3, m1, m2, m3):
+    assert clebsch(j1, j2, j3, m1, m2, m3) == 0
+
+
 @pytest.mark.parametrize('j', [60, 90, 120])
 def test_clebsch_large_j_normalisation(j):
     """sum_j3 C(j,j,j3,m1,m2,m1+m2)^2 = 1, for j large enough to overflow."""
